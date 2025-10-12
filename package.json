@@ -4,7 +4,27 @@
   "type": "module",
   "author": "GameRoMan",
   "license": "MIT",
+  "scripts": {
+    "build": "bunx tsdown",
+    "npm:publish": "bun run build && bun publish"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
+    "bit-twiddle": "^1.0.2",
+    "fft-js": "^0.0.12",
+    "fft.js": "^4.0.4",
+    "fftjs": "^0.0.4",
+    "tsdown": "^0.15.6",
     "typescript": "^5.9.2"
+  },
+  "exports": {
+    "./fft-js": "./dist/fft-js.js",
+    "./fft.js": "./dist/fft.js.js",
+    "./fftjs": "./dist/fftjs.js",
+    "./package.json": "./package.json"
   }
 }

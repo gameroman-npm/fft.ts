@@ -22,12 +22,18 @@ function fft(vector: Vector): ComplexNumber[] {
   }
 
   // Recurse: all even samples
-  const even = (__, ix) => ix % 2 == 0;
-  const X_evens = fft(vector.filter(even));
+  const X_evens = fft(
+    vector.filter(function even(__, ix) {
+      return ix % 2 == 0;
+    })
+  );
 
   // Recurse: all odd samples
-  const odd = (__, ix) => ix % 2 == 1;
-  const X_odds = fft(vector.filter(odd));
+  const X_odds = fft(
+    vector.filter(function odd(__, ix) {
+      return ix % 2 == 1;
+    })
+  );
 
   // Now, perform N/2 operations!
   for (let k = 0; k < N / 2; k++) {
@@ -49,8 +55,9 @@ function fft(vector: Vector): ComplexNumber[] {
  * This is the in-place implementation
  * to avoid the memory footprint used by recursion.
  */
-function fftInPlace(vector): void {
-  const N = vector.length;
+function fftInPlace(vector: number[]): ComplexNumber[] {
+  const vector_: (number | ComplexNumber)[] = vector;
+  const N = vector_.length;
 
   const trailingZeros = twiddle.countTrailingZeros(N); // Once reversed, this will be leading zeros
 
@@ -58,28 +65,32 @@ function fftInPlace(vector): void {
   for (let k = 0; k < N; k++) {
     const p = twiddle.reverse(k) >>> (twiddle.INT_BITS - trailingZeros);
     if (p > k) {
-      const complexTemp: ComplexNumber = [vector[k], 0];
-      vector[k] = vector[p];
-      vector[p] = complexTemp;
+      const complexTemp: ComplexNumber = [vector_[k] as number, 0];
+      vector_[k] = vector_[p]!;
+      vector_[p] = complexTemp;
     } else {
-      vector[p] = [vector[p], 0];
+      vector_[p] = [vector_[p] as number, 0];
     }
   }
+
+  const vector__ = vector_ as ComplexNumber[];
 
   // Do the DIT now in-place
   for (let len = 2; len <= N; len += len) {
     for (let i = 0; i < len / 2; i++) {
       const w = fftUtil.exponent(i, len);
       for (let j = 0; j < N / len; j++) {
-        const t = complex.multiply(w, vector[j * len + i + len / 2]);
-        vector[j * len + i + len / 2] = complex.subtract(
-          vector[j * len + i],
+        const t = complex.multiply(w, vector__[j * len + i + len / 2]!);
+        vector__[j * len + i + len / 2] = complex.subtract(
+          vector__[j * len + i]!,
           t
         );
-        vector[j * len + i] = complex.add(vector[j * len + i], t);
+        vector__[j * len + i] = complex.add(vector__[j * len + i]!, t);
       }
     }
   }
+
+  return vector__;
 }
 
 export { fft, fftInPlace };

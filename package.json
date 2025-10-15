@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "bunx tsdown",
+    "test": "bun test",
     "npm:publish": "bun run build && bun publish"
   },
   "files": [
@@ -18,13 +19,15 @@
     "fft-js": "^0.0.12",
     "fft.js": "^4.0.4",
     "fftjs": "^0.0.4",
-    "tsdown": "^0.15.6",
-    "typescript": "^5.9.2"
+    "mathjs": "^15.0.0",
+    "tsdown": "^0.15.7",
+    "typescript": "^5.9.3"
   },
   "exports": {
     "./fft-js": "./dist/fft-js.js",
     "./fft.js": "./dist/fft.js.js",
     "./fftjs": "./dist/fftjs.js",
+    "./nayuki": "./dist/nayuki.js",
     "./package.json": "./package.json"
   }
 }

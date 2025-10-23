@@ -37,7 +37,7 @@ function fftMag(fftBins: ComplexNumber[]): number[] {
  * each FFT bin provided, assuming the sampleRate is
  * samples taken per second.
  */
-function fftFreq(fftBins, sampleRate: number) {
+function fftFreq(fftBins: ComplexNumber[], sampleRate: number) {
   const stepFreq = sampleRate / fftBins.length;
   const ret = fftBins.slice(0, fftBins.length / 2);
 

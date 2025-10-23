@@ -20,7 +20,7 @@
     "fft.js": "^4.0.4",
     "fftjs": "^0.0.4",
     "mathjs": "^15.0.0",
-    "tsdown": "^0.15.7",
+    "tsdown": "^0.15.9",
     "typescript": "^5.9.3"
   },
   "exports": {

@@ -5,7 +5,7 @@
   "author": "GameRoMan",
   "license": "MIT",
   "scripts": {
-    "build": "bunx tsdown",
+    "build": "bunx --bun tsdown",
     "test": "bun test",
     "npm:publish": "bun run build && bun publish"
   },

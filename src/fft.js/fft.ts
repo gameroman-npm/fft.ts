@@ -15,7 +15,7 @@ class FFT {
 
     this._csize = size << 1;
 
-    const table = new Array(this.size * 2);
+    const table = Array.from<number>({ length: this.size * 2 });
     for (let i = 0; i < table.length; i += 2) {
       const angle = (Math.PI * i) / this.size;
       table[i] = Math.cos(angle);
@@ -33,7 +33,7 @@ class FFT {
     this._width = power % 2 === 0 ? power - 1 : power;
 
     // Pre-compute bit-reversal patterns
-    this._bitrev = new Array(1 << this._width);
+    this._bitrev = Array.from({ length: 1 << this._width });
     for (let j = 0; j < this._bitrev.length; j++) {
       this._bitrev[j] = 0;
       for (let shift = 0; shift < this._width; shift += 2) {
@@ -48,13 +48,13 @@ class FFT {
   }
 
   fromComplexArray(complex: number[], storage?: number[]): number[] {
-    const res = storage || new Array(complex.length >>> 1);
+    const res = storage || Array.from({ length: complex.length >>> 1 });
     for (let i = 0; i < complex.length; i += 2) res[i >>> 1] = complex[i];
     return res;
   }
 
   createComplexArray(): number[] {
-    const res = new Array<number>(this._csize);
+    const res = Array.from<number>({ length: this._csize });
     for (let i = 0; i < res.length; i++) res[i] = 0;
     return res;
   }
@@ -450,7 +450,7 @@ class FFT {
   private _singleRealTransform2(
     outOff: number,
     off: number,
-    step: number
+    step: number,
   ): void {
     const out = this._out;
     const data = this._data;
@@ -475,7 +475,7 @@ class FFT {
   private _singleRealTransform4(
     outOff: number,
     off: number,
-    step: number
+    step: number,
   ): void {
     const out = this._out;
     const data = this._data;

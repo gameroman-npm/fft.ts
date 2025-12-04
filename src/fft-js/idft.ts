@@ -1,11 +1,11 @@
 import dft from "./dft";
 import type { ComplexNumber } from "./types";
 
-function idft(signal): ComplexNumber[] {
+function idft(signal: ComplexNumber[]): ComplexNumber[] {
   // Interchange real and imaginary parts
   const csignal: ComplexNumber[] = [];
   for (let i = 0; i < signal.length; i++) {
-    csignal[i] = [signal[i][1], signal[i][0]];
+    csignal[i] = [signal[i]![1], signal[i]![0]];
   }
 
   // Apply dft

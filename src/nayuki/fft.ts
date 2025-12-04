@@ -4,16 +4,18 @@
  */
 function transform(
   real: Array<number> | Float64Array,
-  imag: Array<number> | Float64Array
+  imag: Array<number> | Float64Array,
 ): void {
   const n: number = real.length;
   if (n != imag.length) throw new RangeError("Mismatched lengths");
   if (n == 0) return;
-  else if ((n & (n - 1)) == 0)
+  else if ((n & (n - 1)) == 0) {
     // Is power of 2
     transformRadix2(real, imag);
-  // More complicated algorithm for arbitrary sizes
-  else transformBluestein(real, imag);
+  } else {
+    // More complicated algorithm for arbitrary sizes
+    transformBluestein(real, imag);
+  }
 }
 
 /*
@@ -22,7 +24,7 @@ function transform(
  */
 function inverseTransform(
   real: Array<number> | Float64Array,
-  imag: Array<number> | Float64Array
+  imag: Array<number> | Float64Array,
 ): void {
   transform(imag, real);
 }
@@ -33,7 +35,7 @@ function inverseTransform(
  */
 function transformRadix2(
   real: Array<number> | Float64Array,
-  imag: Array<number> | Float64Array
+  imag: Array<number> | Float64Array,
 ): void {
   // Length variables
   const n: number = real.length;
@@ -48,8 +50,8 @@ function transformRadix2(
   if (levels == -1) throw new RangeError("Length is not a power of 2");
 
   // Trigonometric tables
-  let cosTable = new Array<number>(n / 2);
-  let sinTable = new Array<number>(n / 2);
+  let cosTable = Array.from<number>({ length: n / 2 });
+  let sinTable = Array.from<number>({ length: n / 2 });
   for (let i = 0; i < n / 2; i++) {
     cosTable[i] = Math.cos((2 * Math.PI * i) / n);
     sinTable[i] = Math.sin((2 * Math.PI * i) / n);
@@ -103,7 +105,7 @@ function transformRadix2(
  */
 function transformBluestein(
   real: Array<number> | Float64Array,
-  imag: Array<number> | Float64Array
+  imag: Array<number> | Float64Array,
 ): void {
   // Find a power-of-2 convolution length m such that m >= n * 2 + 1
   const n: number = real.length;
@@ -112,8 +114,8 @@ function transformBluestein(
   while (m < n * 2 + 1) m *= 2;
 
   // Trigonometric tables
-  let cosTable = new Array<number>(n);
-  let sinTable = new Array<number>(n);
+  let cosTable = Array.from<number>({ length: n });
+  let sinTable = Array.from<number>({ length: n });
   for (let i = 0; i < n; i++) {
     const j: number = (i * i) % (n * 2); // This is more accurate than j = i * i
     cosTable[i] = Math.cos((Math.PI * j) / n);
@@ -137,8 +139,8 @@ function transformBluestein(
   }
 
   // Convolution
-  let creal = new Array<number>(m);
-  let cimag = new Array<number>(m);
+  let creal = Array.from<number>({ length: m });
+  let cimag = Array.from<number>({ length: m });
   convolveComplex(areal, aimag, breal, bimag, creal, cimag);
 
   // Postprocessing
@@ -154,7 +156,7 @@ function transformBluestein(
 function convolveReal(
   xvec: Array<number> | Float64Array,
   yvec: Array<number> | Float64Array,
-  outvec: Array<number> | Float64Array
+  outvec: Array<number> | Float64Array,
 ): void {
   const n: number = xvec.length;
   if (n != yvec.length || n != outvec.length)
@@ -165,7 +167,7 @@ function convolveReal(
     yvec,
     newArrayOfZeros(n),
     outvec,
-    newArrayOfZeros(n)
+    newArrayOfZeros(n),
   );
 }
 
@@ -178,7 +180,7 @@ function convolveComplex(
   yreal: Array<number> | Float64Array,
   yimag: Array<number> | Float64Array,
   outreal: Array<number> | Float64Array,
-  outimag: Array<number> | Float64Array
+  outimag: Array<number> | Float64Array,
 ): void {
   const n: number = xreal.length;
   if (

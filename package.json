@@ -15,19 +15,17 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "bit-twiddle": "^1.0.2",
     "fft-js": "^0.0.12",
     "fft.js": "^4.0.4",
     "fftjs": "^0.0.4",
-    "mathjs": "^15.0.0",
-    "tsdown": "^0.15.9",
+    "tsdown": "^0.17.0",
     "typescript": "^5.9.3"
   },
   "exports": {
-    "./fft-js": "./dist/fft-js.js",
-    "./fft.js": "./dist/fft.js.js",
-    "./fftjs": "./dist/fftjs.js",
-    "./nayuki": "./dist/nayuki.js",
+    "./fft-js": "./dist/fft-js.mjs",
+    "./fft.js": "./dist/fft.js.mjs",
+    "./fftjs": "./dist/fftjs.mjs",
+    "./nayuki": "./dist/nayuki.mjs",
     "./package.json": "./package.json"
   }
 }

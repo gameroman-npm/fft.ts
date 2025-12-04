@@ -1,4 +1,3 @@
-//-------------------------------------------------
 import * as complex from "./complex";
 import type { ComplexNumber } from "./types";
 

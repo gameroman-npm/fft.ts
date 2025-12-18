@@ -8,7 +8,7 @@ function fixRoundEqual(actual: number[], expected: number[]) {
   }
 
   expect(actual.map(fixRound).join(":")).toStrictEqual(
-    expected.map(fixRound).join(":")
+    expected.map(fixRound).join(":"),
   );
 }
 

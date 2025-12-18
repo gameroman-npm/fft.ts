@@ -1,10 +1,6 @@
 import { describe, it, expect } from "bun:test";
 
-import assert from "node:assert";
-
 import { fft, ifft, fftInPlace, dft, idft, type ComplexNumber } from "~/fft-js";
-
-const THRESHOLD_DIGITS = 9;
 
 describe("FFT (Cooley-Tukey)", function () {
   describe("1,0,1,0", function () {
@@ -118,20 +114,20 @@ describe("Compare FFT to DFT", function () {
   describe("randomSignal FFT", function () {
     it("Should compute randomSignal", function () {
       coefFFT = fft(randomSignal);
-      assert(coefFFT && coefFFT.length == randomSignal.length);
+      expect(coefFFT).toBeArrayOfSize(randomSignal.length);
     });
   });
   describe("randomSignal in-place FFT", function () {
     it("Should compute randomSignal", function () {
       const vectorInPlace_ = randomSignal.slice(); // We must copy the original, since the in-place implementation is destructive of the input vector.
       vectorInPlace = fftInPlace(vectorInPlace_);
-      assert(vectorInPlace && vectorInPlace.length == randomSignal.length);
+      expect(vectorInPlace).toBeArrayOfSize(randomSignal.length);
     });
   });
   describe("randomSignal DFT", function () {
     it("Should compute randomSignal", function () {
       coefDFT = dft(randomSignal);
-      assert(coefDFT && coefDFT.length == randomSignal.length);
+      expect(coefDFT).toBeArrayOfSize(randomSignal.length);
     });
   });
   describe("randomSignal FFT and DFT", function () {
@@ -167,6 +163,7 @@ function signalVector(vectorLength?: number): number[] {
 }
 
 function expectEqualWithThresh(val1: number, val2: number) {
+  const THRESHOLD_DIGITS = 9;
   expect(val1).toBeCloseTo(val2, THRESHOLD_DIGITS);
 }
 

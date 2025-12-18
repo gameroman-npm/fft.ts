@@ -1,19 +1,19 @@
 class FFT {
   private size: number;
-  private _csize: number;
+  #csize: number;
   private table: number[];
-  private _width: number;
-  private _bitrev: number[];
-  private _out: number[] | null = null;
-  private _data: number[] | null = null;
-  private _inv: number = 0;
+  #width: number;
+  #bitrev: number[];
+  #out: number[] | null = null;
+  #data: number[] | null = null;
+  #inv: number = 0;
 
   constructor(size: number) {
     this.size = size | 0;
     if (this.size <= 1 || (this.size & (this.size - 1)) !== 0)
       throw new Error("FFT size must be a power of two and bigger than 1");
 
-    this._csize = size << 1;
+    this.#csize = size << 1;
 
     const table = Array.from<number>({ length: this.size * 2 });
     for (let i = 0; i < table.length; i += 2) {
@@ -30,21 +30,21 @@ class FFT {
     // Calculate initial step's width:
     //   * If we are full radix-4 - it is 2x smaller to give inital len=8
     //   * Otherwise it is the same as `power` to give len=4
-    this._width = power % 2 === 0 ? power - 1 : power;
+    this.#width = power % 2 === 0 ? power - 1 : power;
 
     // Pre-compute bit-reversal patterns
-    this._bitrev = Array.from({ length: 1 << this._width });
-    for (let j = 0; j < this._bitrev.length; j++) {
-      this._bitrev[j] = 0;
-      for (let shift = 0; shift < this._width; shift += 2) {
-        const revShift = this._width - shift - 2;
-        this._bitrev[j] |= ((j >>> shift) & 3) << revShift;
+    this.#bitrev = Array.from({ length: 1 << this.#width });
+    for (let j = 0; j < this.#bitrev.length; j++) {
+      this.#bitrev[j] = 0;
+      for (let shift = 0; shift < this.#width; shift += 2) {
+        const revShift = this.#width - shift - 2;
+        this.#bitrev[j]! |= ((j >>> shift) & 3) << revShift;
       }
     }
 
-    this._out = null;
-    this._data = null;
-    this._inv = 0;
+    this.#out = null;
+    this.#data = null;
+    this.#inv = 0;
   }
 
   fromComplexArray(complex: number[], storage?: number[]): number[] {
@@ -54,7 +54,7 @@ class FFT {
   }
 
   createComplexArray(): number[] {
-    const res = Array.from<number>({ length: this._csize });
+    const res = Array.from<number>({ length: this.#csize });
     for (let i = 0; i < res.length; i++) res[i] = 0;
     return res;
   }
@@ -69,7 +69,7 @@ class FFT {
   }
 
   completeSpectrum(spectrum: number[]): void {
-    const size = this._csize;
+    const size = this.#csize;
     const half = size >>> 1;
     for (let i = 2; i < half; i += 2) {
       spectrum[size - i] = spectrum[i];
@@ -81,12 +81,12 @@ class FFT {
     if (out === data)
       throw new Error("Input and output buffers must be different");
 
-    this._out = out;
-    this._data = data;
-    this._inv = 0;
-    this._transform4();
-    this._out = null;
-    this._data = null;
+    this.#out = out;
+    this.#data = data;
+    this.#inv = 0;
+    this.#transform4();
+    this.#out = null;
+    this.#data = null;
   }
 
   realTransform(out: number[], data: number[]) {
@@ -94,12 +94,12 @@ class FFT {
       throw new Error("Input and output buffers must be different");
     }
 
-    this._out = out;
-    this._data = data;
-    this._inv = 0;
-    this._realTransform4();
-    this._out = null;
-    this._data = null;
+    this.#out = out;
+    this.#data = data;
+    this.#inv = 0;
+    this.#realTransform4();
+    this.#out = null;
+    this.#data = null;
   }
 
   inverseTransform(out: number[], data: number[]): void {
@@ -107,43 +107,43 @@ class FFT {
       throw new Error("Input and output buffers must be different");
     }
 
-    this._out = out;
-    this._data = data;
-    this._inv = 1;
-    this._transform4();
+    this.#out = out;
+    this.#data = data;
+    this.#inv = 1;
+    this.#transform4();
     for (let i = 0; i < out.length; i++) out[i]! /= this.size;
-    this._out = null;
-    this._data = null;
+    this.#out = null;
+    this.#data = null;
   }
 
   /**
    * radix-4 implementation
    */
-  private _transform4(): void {
-    const out = this._out;
-    const size = this._csize;
+  #transform4(): void {
+    const out = this.#out;
+    const size = this.#csize;
 
     // Initial step (permute and transform)
-    const width = this._width;
+    const width = this.#width;
     let step = 1 << width;
     let len = (size / step) << 1;
 
-    const bitrev = this._bitrev;
+    const bitrev = this.#bitrev;
     if (len === 4) {
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
         const off = bitrev[t];
-        this._singleTransform2(outOff, off, step);
+        this.#singleTransform2(outOff, off, step);
       }
     } else {
       // len === 8
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
         const off = bitrev[t];
-        this._singleTransform4(outOff, off, step);
+        this.#singleTransform4(outOff, off, step);
       }
     }
 
     // Loop through steps in decreasing order
-    const inv = this._inv ? -1 : 1;
+    const inv = this.#inv ? -1 : 1;
     const table = this.table;
     for (step >>= 2; step >= 2; step >>= 2) {
       len = (size / step) << 1;
@@ -229,9 +229,9 @@ class FFT {
    *
    * NOTE: Only called for len=4
    */
-  private _singleTransform2(outOff: number, off: number, step: number): void {
-    const out = this._out;
-    const data = this._data;
+  #singleTransform2(outOff: number, off: number, step: number): void {
+    const out = this.#out;
+    const data = this.#data;
 
     const evenR = data[off];
     const evenI = data[off + 1];
@@ -254,10 +254,10 @@ class FFT {
    *
    * NOTE: Only called for len=8
    */
-  private _singleTransform4(outOff: number, off: number, step: number): void {
-    const out = this._out;
-    const data = this._data;
-    const inv = this._inv ? -1 : 1;
+  #singleTransform4(outOff: number, off: number, step: number): void {
+    const out = this.#out;
+    const data = this.#data;
+    const inv = this.#inv ? -1 : 1;
     const step2 = step * 2;
     const step3 = step * 3;
 
@@ -307,31 +307,31 @@ class FFT {
   /**
    * Real input radix-4 implementation
    */
-  private _realTransform4(): void {
-    const out = this._out;
-    let size = this._csize;
+  #realTransform4(): void {
+    const out = this.#out;
+    let size = this.#csize;
 
     // Initial step (permute and transform)
-    const width = this._width;
+    const width = this.#width;
     let step = 1 << width;
     let len = (size / step) << 1;
 
-    const bitrev = this._bitrev;
+    const bitrev = this.#bitrev;
     if (len === 4) {
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
         const off = bitrev[t];
-        this._singleRealTransform2(outOff, off >>> 1, step >>> 1);
+        this.#singleRealTransform2(outOff, off >>> 1, step >>> 1);
       }
     } else {
       // len === 8
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
         const off = bitrev[t];
-        this._singleRealTransform4(outOff, off >>> 1, step >>> 1);
+        this.#singleRealTransform4(outOff, off >>> 1, step >>> 1);
       }
     }
 
     // Loop through steps in decreasing order
-    const inv = this._inv ? -1 : 1;
+    const inv = this.#inv ? -1 : 1;
     const table = this.table;
     for (step >>= 2; step >= 2; step >>= 2) {
       len = (size / step) << 1;
@@ -447,13 +447,9 @@ class FFT {
    *
    * NOTE: Only called for len=4
    */
-  private _singleRealTransform2(
-    outOff: number,
-    off: number,
-    step: number,
-  ): void {
-    const out = this._out;
-    const data = this._data;
+  #singleRealTransform2(outOff: number, off: number, step: number): void {
+    const out = this.#out;
+    const data = this.#data;
 
     const evenR = data[off];
     const oddR = data[off + step];
@@ -472,14 +468,10 @@ class FFT {
    *
    * NOTE: Only called for len=8
    */
-  private _singleRealTransform4(
-    outOff: number,
-    off: number,
-    step: number,
-  ): void {
-    const out = this._out;
-    const data = this._data;
-    const inv = this._inv ? -1 : 1;
+  #singleRealTransform4(outOff: number, off: number, step: number): void {
+    const out = this.#out;
+    const data = this.#data;
+    const inv = this.#inv ? -1 : 1;
     const step2 = step * 2;
     const step3 = step * 3;
 

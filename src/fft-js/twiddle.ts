@@ -1,8 +1,7 @@
 /** Number of bits in an integer */
 const INT_BITS = 32;
-const INT_MIN = -1 << (INT_BITS - 1);
 
-export { INT_BITS, INT_MIN };
+export { INT_BITS };
 
 /** Counts number of trailing zeros */
 function countTrailingZeros(v: number): number {
@@ -19,7 +18,7 @@ function countTrailingZeros(v: number): number {
 
 const REVERSE_TABLE = Array.from<number>({ length: 256 });
 
-(function (tab) {
+(function (table) {
   for (let i = 0; i < 256; ++i) {
     let v = i;
     let r = i;
@@ -29,7 +28,7 @@ const REVERSE_TABLE = Array.from<number>({ length: 256 });
       r |= v & 1;
       --s;
     }
-    tab[i] = (r << s) & 0xff;
+    table[i] = (r << s) & 0xff;
   }
 })(REVERSE_TABLE);
 

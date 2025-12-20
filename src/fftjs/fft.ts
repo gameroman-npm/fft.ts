@@ -25,19 +25,19 @@ function fft(signal: Signal): ComplexSignal {
   const bitReversedIndices = utils.bitReverseArray(n);
 
   // sort array
-  const ordered = {
+  const ordered: ComplexSignal = {
     real: [],
     imag: [],
   };
 
   for (let i = 0; i < n; i++) {
-    ordered.real[bitReversedIndices[i]] = complexSignal.real[i];
-    ordered.imag[bitReversedIndices[i]] = complexSignal.imag[i];
+    ordered.real[bitReversedIndices[i]!] = complexSignal.real[i]!;
+    ordered.imag[bitReversedIndices[i]!] = complexSignal.imag[i]!;
   }
 
   for (let i = 0; i < n; i++) {
-    complexSignal.real[i] = ordered.real[i];
-    complexSignal.imag[i] = ordered.imag[i];
+    complexSignal.real[i] = ordered.real[i]!;
+    complexSignal.imag[i] = ordered.imag[i]!;
   }
   // iterate over the number of stages
   for (let n = 1; n <= logN; n++) {
@@ -53,12 +53,12 @@ function fft(signal: Signal): ComplexSignal {
         const currOddIndex = currN * m + k + currN / 2;
 
         const currEvenIndexSample: ComplexNumber = {
-          real: complexSignal.real[currEvenIndex],
-          imag: complexSignal.imag[currEvenIndex],
+          real: complexSignal.real[currEvenIndex]!,
+          imag: complexSignal.imag[currEvenIndex]!,
         };
         const currOddIndexSample: ComplexNumber = {
-          real: complexSignal.real[currOddIndex],
-          imag: complexSignal.imag[currOddIndex],
+          real: complexSignal.real[currOddIndex]!,
+          imag: complexSignal.imag[currOddIndex]!,
         };
 
         const odd = utils.multiply(twiddle, currOddIndexSample);
@@ -93,8 +93,8 @@ function ifft(signal: ComplexSignal): ComplexSignal {
   //take complex conjugate in order to be able to use the regular FFT for IFFT
   for (let i = 0; i < n; i++) {
     const currentSample: ComplexNumber = {
-      real: signal.real[i],
-      imag: signal.imag[i],
+      real: signal.real[i]!,
+      imag: signal.imag[i]!,
     };
 
     const conjugateSample = utils.conj(currentSample);

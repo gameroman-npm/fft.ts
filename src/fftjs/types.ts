@@ -6,4 +6,4 @@ type RealSignal = [] & { real?: undefined };
 
 type Signal = ComplexSignal | RealSignal;
 
-export type { ComplexNumber, ComplexSignal, RealSignal, Signal };
+export type { ComplexNumber, ComplexSignal, Signal };

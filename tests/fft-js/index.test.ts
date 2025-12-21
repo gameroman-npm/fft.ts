@@ -6,14 +6,28 @@ describe("FFT (Cooley-Tukey)", function () {
   describe("1,0,1,0", function () {
     it("Should properly compute [1,0,1,0]", function () {
       const coef = fft([1, 0, 1, 0]);
-      checkShortVectorWithThresh(coef);
+      checkWithExpected(coef, [
+        [2, 0],
+        [0, 0],
+        [2, 0],
+        [0, 0],
+      ]);
     });
   });
 
   describe("1,0,1,0,2,0,2,0", function () {
     it("Should properly compute [1,0,1,0,2,0,2,0]", function () {
       const coef = fft([1, 0, 1, 0, 2, 0, 2, 0]);
-      checkLongVectorWithThresh(coef);
+      checkWithExpected(coef, [
+        [6, 0],
+        [-1, 1],
+        [0, 0],
+        [-1, -1],
+        [6, 0],
+        [-1, 1],
+        [0, 0],
+        [-1, -1],
+      ]);
     });
   });
 });
@@ -27,7 +41,12 @@ describe("IFFT (Cooley-Tukey)", function () {
         [1, 0],
         [0, 0],
       ]);
-      checkShortVectorWithThreshIfft(coef);
+      checkWithExpected(coef, [
+        [0.5, 0],
+        [0, 0],
+        [0.5, 0],
+        [0, 0],
+      ]);
     });
   });
 
@@ -43,7 +62,16 @@ describe("IFFT (Cooley-Tukey)", function () {
         [2, 0],
         [0, 0],
       ]);
-      checkLongVectorWithThreshIfft(coef);
+      checkWithExpected(coef, [
+        [0.75, 0],
+        [-0.125, -0.125],
+        [0, 0],
+        [-0.125, 0.125],
+        [0.75, 0],
+        [-0.125, -0.125],
+        [0, 0],
+        [-0.125, 0.125],
+      ]);
     });
   });
 });
@@ -53,7 +81,12 @@ describe("FFT (in-place Cooley-Tukey)", function () {
     it("Should properly compute [1,0,1,0]", function () {
       const vector_ = [1, 0, 1, 0];
       const vector = fftInPlace(vector_);
-      checkShortVectorWithThresh(vector);
+      checkWithExpected(vector, [
+        [2, 0],
+        [0, 0],
+        [2, 0],
+        [0, 0],
+      ]);
     });
   });
 
@@ -61,7 +94,16 @@ describe("FFT (in-place Cooley-Tukey)", function () {
     it("Should properly compute [1,0,1,0,2,0,2,0]", function () {
       const vector_ = [1, 0, 1, 0, 2, 0, 2, 0];
       const vector = fftInPlace(vector_);
-      checkLongVectorWithThresh(vector);
+      checkWithExpected(vector, [
+        [6, 0],
+        [-1, 1],
+        [0, 0],
+        [-1, -1],
+        [6, 0],
+        [-1, 1],
+        [0, 0],
+        [-1, -1],
+      ]);
     });
   });
 });
@@ -70,7 +112,12 @@ describe("DFT O(n^2) Brute Force", function () {
   describe("1,0,1,0", function () {
     it("Should properly compute [1, 0, 1, 0]", function () {
       const coef = dft([1, 0, 1, 0]);
-      checkShortVectorWithThresh(coef);
+      checkWithExpected(coef, [
+        [2, 0],
+        [0, 0],
+        [2, 0],
+        [0, 0],
+      ]);
     });
   });
 });
@@ -84,7 +131,12 @@ describe("IDFT O(n^2) Brute Force", function () {
         [1, 0],
         [0, 0],
       ]);
-      checkShortVectorWithThreshIfft(coef);
+      checkWithExpected(coef, [
+        [0.5, 0],
+        [0, 0],
+        [0.5, 0],
+        [0, 0],
+      ]);
     });
   });
 
@@ -100,7 +152,16 @@ describe("IDFT O(n^2) Brute Force", function () {
         [2, 0],
         [0, 0],
       ]);
-      checkLongVectorWithThreshIfft(coef);
+      checkWithExpected(coef, [
+        [0.75, 0],
+        [-0.125, -0.125],
+        [0, 0],
+        [-0.125, 0.125],
+        [0.75, 0],
+        [-0.125, -0.125],
+        [0, 0],
+        [-0.125, 0.125],
+      ]);
     });
   });
 });
@@ -172,48 +233,4 @@ function checkWithExpected(coef: ComplexNumber[], expected: ComplexNumber[]) {
     expectEqualWithThresh(coef[i]![0], expected[i]![0]);
     expectEqualWithThresh(coef[i]![1], expected[i]![1]);
   }
-}
-
-function checkShortVectorWithThresh(coef: [number, number][]) {
-  checkWithExpected(coef, [
-    [2, 0],
-    [0, 0],
-    [2, 0],
-    [0, 0],
-  ]);
-}
-
-function checkLongVectorWithThresh(coef: [number, number][]) {
-  checkWithExpected(coef, [
-    [6, 0],
-    [-1, 1],
-    [0, 0],
-    [-1, -1],
-    [6, 0],
-    [-1, 1],
-    [0, 0],
-    [-1, -1],
-  ]);
-}
-
-function checkShortVectorWithThreshIfft(coef: [number, number][]) {
-  checkWithExpected(coef, [
-    [0.5, 0],
-    [0, 0],
-    [0.5, 0],
-    [0, 0],
-  ]);
-}
-
-function checkLongVectorWithThreshIfft(coef: [number, number][]) {
-  checkWithExpected(coef, [
-    [0.75, 0],
-    [-0.125, -0.125],
-    [0, 0],
-    [-0.125, 0.125],
-    [0.75, 0],
-    [-0.125, -0.125],
-    [0, 0],
-    [-0.125, 0.125],
-  ]);
 }

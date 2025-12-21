@@ -15,10 +15,11 @@ function fft(signal: Signal): ComplexSignal {
   const n = complexSignal.real.length;
   const logN = Math.log2(n);
 
-  if (Math.round(logN) != logN)
+  if (Math.round(logN) !== logN) {
     throw new Error("Input size must be a power of 2.");
+  }
 
-  if (complexSignal.real.length != complexSignal.imag.length) {
+  if (complexSignal.real.length !== complexSignal.imag.length) {
     throw new Error("Real and imaginary components must have the same length.");
   }
 

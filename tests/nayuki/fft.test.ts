@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
 
-import { transform, inverseTransform, convolveComplex } from "~/nayuki";
+import { transform, inverseTransform, convolveComplex } from "../../src/nayuki";
 
 /*---- Test functions ----*/
 

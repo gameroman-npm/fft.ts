@@ -8,5 +8,5 @@ export default defineConfig({
     nayuki: "src/nayuki/index.ts",
   },
   exports: true,
-  dts: { tsgo: true },
+  dts: true,
 });

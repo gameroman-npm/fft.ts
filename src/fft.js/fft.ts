@@ -89,7 +89,7 @@ class FFT {
     this.#data = null;
   }
 
-  realTransform(out: number[], data: number[]) {
+  realTransform(out: number[], data: number[]): void {
     if (out === data) {
       throw new Error("Input and output buffers must be different");
     }

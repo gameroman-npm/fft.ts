@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
 
-import { FFT } from "~/fft.js";
+import { FFT } from "../../src/fft.js";
 
 function fixRoundEqual(actual: number[], expected: number[]) {
   function fixRound(r: number) {

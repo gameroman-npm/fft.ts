@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
 
-import { fft, ifft, fftInPlace, dft, idft, type ComplexNumber } from "~/fft-js";
+import { fft, ifft, fftInPlace, dft, idft, type ComplexNumber } from "../../src/fft-js";
 
 describe("FFT (Cooley-Tukey)", function () {
   describe("1,0,1,0", function () {

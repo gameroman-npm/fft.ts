@@ -15,7 +15,7 @@ function constructComplexArray(signal: Signal): ComplexSignal {
   if (memoizedZeroBuffers[bufferSize] === undefined) {
     memoizedZeroBuffers[bufferSize] = Array.apply(null, Array(bufferSize)).map(
       Number.prototype.valueOf,
-      0
+      0,
     );
   }
 

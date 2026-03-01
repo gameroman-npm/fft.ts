@@ -1,7 +1,6 @@
 import * as complex from "./complex";
 import * as fftUtil from "./fftutil";
 import * as twiddle from "./twiddle";
-
 import type { ComplexNumber, Vector } from "./types";
 
 /**
@@ -25,14 +24,14 @@ function fft(vector: Vector): ComplexNumber[] {
   const X_evens = fft(
     vector.filter(function even(__, ix) {
       return ix % 2 == 0;
-    })
+    }),
   );
 
   // Recurse: all odd samples
   const X_odds = fft(
     vector.filter(function odd(__, ix) {
       return ix % 2 == 1;
-    })
+    }),
   );
 
   // Now, perform N/2 operations!
@@ -83,7 +82,7 @@ function fftInPlace(vector: number[]): ComplexNumber[] {
         const t = complex.multiply(w, vector__[j * len + i + len / 2]!);
         vector__[j * len + i + len / 2] = complex.subtract(
           vector__[j * len + i]!,
-          t
+          t,
         );
         vector__[j * len + i] = complex.add(vector__[j * len + i]!, t);
       }

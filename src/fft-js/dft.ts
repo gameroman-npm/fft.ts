@@ -1,6 +1,5 @@
 import * as complex from "./complex";
 import * as fftUtil from "./fftutil";
-
 import type { ComplexNumber } from "./types";
 
 /**

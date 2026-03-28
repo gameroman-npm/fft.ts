@@ -37,8 +37,8 @@ function testConvolution(size: number) {
   const input1real = randomReals(size);
   const input1imag = randomReals(size);
 
-  let expectreal = Array.from<number>({ length: size });
-  let expectimag = Array.from<number>({ length: size });
+  const expectreal = Array.from<number>({ length: size });
+  const expectimag = Array.from<number>({ length: size });
   naiveConvolve(
     input0real,
     input0imag,
@@ -48,8 +48,8 @@ function testConvolution(size: number) {
     expectimag,
   );
 
-  let actualreal = Array.from<number>({ length: size });
-  let actualimag = Array.from<number>({ length: size });
+  const actualreal = Array.from<number>({ length: size });
+  const actualimag = Array.from<number>({ length: size });
   convolveComplex(
     input0real,
     input0imag,
@@ -146,7 +146,7 @@ function log10RmsErr(
 }
 
 function randomReals(size: number): number[] {
-  let result = Array.from<number>({ length: size });
+  const result = Array.from<number>({ length: size });
   for (let i = 0; i < result.length; i++) result[i] = Math.random() * 2 - 1;
   return result;
 }

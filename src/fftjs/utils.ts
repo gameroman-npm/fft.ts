@@ -5,35 +5,29 @@ const memoizedReversal: Record<number, Record<number, number>> = {};
 const memoizedZeroBuffers: Record<number, number[]> = {};
 
 function constructComplexArray(signal: Signal): ComplexSignal {
-  const complexSignal: ComplexSignal = {};
+  const real = signal.real === undefined ? signal.slice() : signal.real.slice();
 
-  complexSignal.real =
-    signal.real === undefined ? signal.slice() : signal.real.slice();
-
-  const bufferSize = complexSignal.real.length;
+  const bufferSize = real.length;
 
   if (memoizedZeroBuffers[bufferSize] === undefined) {
-    memoizedZeroBuffers[bufferSize] = Array.apply(null, Array(bufferSize)).map(
-      Number.prototype.valueOf,
-      0,
-    );
+    memoizedZeroBuffers[bufferSize] = Array<number>(bufferSize).fill(0);
   }
 
-  complexSignal.imag = memoizedZeroBuffers[bufferSize].slice();
+  const imag = memoizedZeroBuffers[bufferSize].slice();
 
-  return complexSignal;
+  return { real, imag };
 }
 
 function bitReverseArray(n: number): Record<number, number> {
   if (memoizedReversal[n] === undefined) {
-    const maxBinaryLength = (n - 1).toString(2).length; //get the binary length of the largest index.
-    const templateBinary = "0".repeat(maxBinaryLength); //create a template binary of that length.
+    const maxBinaryLength = (n - 1).toString(2).length; // get the binary length of the largest index.
+    const templateBinary = "0".repeat(maxBinaryLength); // create a template binary of that length.
     const reversed: Record<number, number> = {};
     for (let i = 0; i < n; i++) {
-      let currBinary = i.toString(2); //get binary value of current index.
+      let currBinary = i.toString(2); // get binary value of current index.
 
-      //prepend zeros from template to current binary. This makes binary values of all indices have the same length.
-      currBinary = templateBinary.substr(currBinary.length) + currBinary;
+      // prepend zeros from template to current binary. This makes binary values of all indices have the same length.
+      currBinary = templateBinary.slice(currBinary.length) + currBinary;
 
       currBinary = [...currBinary].reverse().join(""); // reverse
       reversed[i] = parseInt(currBinary, 2); // convert to decimal

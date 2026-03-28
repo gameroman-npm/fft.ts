@@ -50,8 +50,8 @@ function transformRadix2(
   if (levels == -1) throw new RangeError("Length is not a power of 2");
 
   // Trigonometric tables
-  let cosTable = Array.from<number>({ length: n / 2 });
-  let sinTable = Array.from<number>({ length: n / 2 });
+  const cosTable = Array.from<number>({ length: n / 2 });
+  const sinTable = Array.from<number>({ length: n / 2 });
   for (let i = 0; i < n / 2; i++) {
     cosTable[i] = Math.cos((2 * Math.PI * i) / n);
     sinTable[i] = Math.sin((2 * Math.PI * i) / n);
@@ -114,8 +114,8 @@ function transformBluestein(
   while (m < n * 2 + 1) m *= 2;
 
   // Trigonometric tables
-  let cosTable = Array.from<number>({ length: n });
-  let sinTable = Array.from<number>({ length: n });
+  const cosTable = Array.from<number>({ length: n });
+  const sinTable = Array.from<number>({ length: n });
   for (let i = 0; i < n; i++) {
     const j: number = (i * i) % (n * 2); // This is more accurate than j = i * i
     cosTable[i] = Math.cos((Math.PI * j) / n);
@@ -123,14 +123,14 @@ function transformBluestein(
   }
 
   // Temporary vectors and preprocessing
-  let areal: Array<number> = newArrayOfZeros(m);
-  let aimag: Array<number> = newArrayOfZeros(m);
+  const areal: Array<number> = newArrayOfZeros(m);
+  const aimag: Array<number> = newArrayOfZeros(m);
   for (let i = 0; i < n; i++) {
     areal[i] = real[i]! * cosTable[i]! + imag[i]! * sinTable[i]!;
     aimag[i] = -real[i]! * sinTable[i]! + imag[i]! * cosTable[i]!;
   }
-  let breal: Array<number> = newArrayOfZeros(m);
-  let bimag: Array<number> = newArrayOfZeros(m);
+  const breal: Array<number> = newArrayOfZeros(m);
+  const bimag: Array<number> = newArrayOfZeros(m);
   breal[0] = cosTable[0]!;
   bimag[0] = sinTable[0]!;
   for (let i = 1; i < n; i++) {
@@ -139,8 +139,8 @@ function transformBluestein(
   }
 
   // Convolution
-  let creal = Array.from<number>({ length: m });
-  let cimag = Array.from<number>({ length: m });
+  const creal = Array.from<number>({ length: m });
+  const cimag = Array.from<number>({ length: m });
   convolveComplex(areal, aimag, breal, bimag, creal, cimag);
 
   // Postprocessing
@@ -214,7 +214,7 @@ function convolveComplex(
 }
 
 function newArrayOfZeros(n: number): Array<number> {
-  let result: Array<number> = [];
+  const result: Array<number> = [];
   for (let i = 0; i < n; i++) result.push(0);
   return result;
 }

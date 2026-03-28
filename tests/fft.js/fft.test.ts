@@ -15,6 +15,7 @@ function fixRoundEqual(actual: number[], expected: number[]) {
 describe("FFT.js", () => {
   it("should compute tables", () => {
     const f = new FFT(8);
+    // @ts-expect-error
     expect(f.table.length).toStrictEqual(16);
   });
 
@@ -125,7 +126,7 @@ describe("FFT.js", () => {
     const f = new FFT(input.length);
 
     const out = f.createComplexArray();
-    let data = f.toComplexArray(input);
+    const data = f.toComplexArray(input);
     f.transform(out, data);
     f.inverseTransform(data, out);
     fixRoundEqual(f.fromComplexArray(data), input);
@@ -138,7 +139,7 @@ describe("FFT.js", () => {
     const f = new FFT(input.length);
 
     const out = f.createComplexArray();
-    let data = f.toComplexArray(input);
+    const data = f.toComplexArray(input);
     f.transform(out, data);
     f.inverseTransform(data, out);
     fixRoundEqual(f.fromComplexArray(data), input);

@@ -72,8 +72,8 @@ class FFT {
     const size = this.#csize;
     const half = size >>> 1;
     for (let i = 2; i < half; i += 2) {
-      spectrum[size - i] = spectrum[i];
-      spectrum[size - i + 1] = -spectrum[i + 1];
+      spectrum[size - i] = spectrum[i]!;
+      spectrum[size - i + 1] = -spectrum[i + 1]!;
     }
   }
 
@@ -120,7 +120,7 @@ class FFT {
    * radix-4 implementation
    */
   #transform4(): void {
-    const out = this.#out;
+    const out = this.#out!;
     const size = this.#csize;
 
     // Initial step (permute and transform)
@@ -230,8 +230,8 @@ class FFT {
    * NOTE: Only called for len=4
    */
   #singleTransform2(outOff: number, off: number, step: number): void {
-    const out = this.#out;
-    const data = this.#data;
+    const out = this.#out!;
+    const data = this.#data!;
 
     const evenR = data[off];
     const evenI = data[off + 1];
@@ -255,8 +255,8 @@ class FFT {
    * NOTE: Only called for len=8
    */
   #singleTransform4(outOff: number, off: number, step: number): void {
-    const out = this.#out;
-    const data = this.#data;
+    const out = this.#out!;
+    const data = this.#data!;
     const inv = this.#inv ? -1 : 1;
     const step2 = step * 2;
     const step3 = step * 3;
@@ -308,8 +308,8 @@ class FFT {
    * Real input radix-4 implementation
    */
   #realTransform4(): void {
-    const out = this.#out;
-    let size = this.#csize;
+    const out = this.#out!;
+    const size = this.#csize;
 
     // Initial step (permute and transform)
     const width = this.#width;
@@ -469,8 +469,8 @@ class FFT {
    * NOTE: Only called for len=8
    */
   #singleRealTransform4(outOff: number, off: number, step: number): void {
-    const out = this.#out;
-    const data = this.#data;
+    const out = this.#out!;
+    const data = this.#data!;
     const inv = this.#inv ? -1 : 1;
     const step2 = step * 2;
     const step3 = step * 3;

@@ -3,13 +3,16 @@ import * as utils from "./utils";
 
 // real to complex fft
 function fft(signal: Signal): ComplexSignal {
-  let complexSignal: ComplexSignal = {};
+  let complexSignal: ComplexSignal;
 
+  // oxlint-disable-next-line no-unnecessary-condition
   if (signal.real === undefined || signal.imag === undefined) {
     complexSignal = utils.constructComplexArray(signal);
   } else {
-    complexSignal.real = signal.real.slice();
-    complexSignal.imag = signal.imag.slice();
+    const real = signal.real.slice();
+    const imag = signal.imag.slice();
+
+    complexSignal = { real, imag };
   }
 
   const n = complexSignal.real.length;
@@ -80,10 +83,6 @@ function fft(signal: Signal): ComplexSignal {
 
 // complex to real ifft
 function ifft(signal: ComplexSignal): ComplexSignal {
-  if (signal.real === undefined || signal.imag === undefined) {
-    throw new Error("IFFT only accepts a complex input.");
-  }
-
   const n = signal.real.length;
 
   const complexSignal: ComplexSignal = {

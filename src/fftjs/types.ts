@@ -2,7 +2,7 @@ type ComplexNumber = { real: number; imag: number };
 
 type ComplexSignal = { real: number[]; imag: number[] };
 
-type RealSignal = [] & { real?: undefined };
+type RealSignal = number[] & { real?: undefined };
 
 type Signal = ComplexSignal | RealSignal;
 

@@ -131,13 +131,13 @@ class FFT {
     const bitrev = this.#bitrev;
     if (len === 4) {
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
-        const off = bitrev[t];
+        const off = bitrev[t]!;
         this.#singleTransform2(outOff, off, step);
       }
     } else {
       // len === 8
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
-        const off = bitrev[t];
+        const off = bitrev[t]!;
         this.#singleTransform4(outOff, off, step);
       }
     }
@@ -160,30 +160,30 @@ class FFT {
           const D = C + quarterLen;
 
           // Original values
-          const Ar = out[A];
-          const Ai = out[A + 1];
-          const Br = out[B];
-          const Bi = out[B + 1];
-          const Cr = out[C];
-          const Ci = out[C + 1];
-          const Dr = out[D];
-          const Di = out[D + 1];
+          const Ar = out[A]!;
+          const Ai = out[A + 1]!;
+          const Br = out[B]!;
+          const Bi = out[B + 1]!;
+          const Cr = out[C]!;
+          const Ci = out[C + 1]!;
+          const Dr = out[D]!;
+          const Di = out[D + 1]!;
 
           // Middle values
           const MAr = Ar;
           const MAi = Ai;
 
-          const tableBr = table[k];
+          const tableBr = table[k]!;
           const tableBi = inv * table[k + 1];
           const MBr = Br * tableBr - Bi * tableBi;
           const MBi = Br * tableBi + Bi * tableBr;
 
-          const tableCr = table[2 * k];
+          const tableCr = table[2 * k]!;
           const tableCi = inv * table[2 * k + 1];
           const MCr = Cr * tableCr - Ci * tableCi;
           const MCi = Cr * tableCi + Ci * tableCr;
 
-          const tableDr = table[3 * k];
+          const tableDr = table[3 * k]!;
           const tableDi = inv * table[3 * k + 1];
           const MDr = Dr * tableDr - Di * tableDi;
           const MDi = Dr * tableDi + Di * tableDr;
@@ -233,10 +233,10 @@ class FFT {
     const out = this.#out!;
     const data = this.#data!;
 
-    const evenR = data[off];
-    const evenI = data[off + 1];
-    const oddR = data[off + step];
-    const oddI = data[off + step + 1];
+    const evenR = data[off]!;
+    const evenI = data[off + 1]!;
+    const oddR = data[off + step]!;
+    const oddI = data[off + step + 1]!;
 
     const leftR = evenR + oddR;
     const leftI = evenI + oddI;
@@ -262,14 +262,14 @@ class FFT {
     const step3 = step * 3;
 
     // Original values
-    const Ar = data[off];
-    const Ai = data[off + 1];
-    const Br = data[off + step];
-    const Bi = data[off + step + 1];
-    const Cr = data[off + step2];
-    const Ci = data[off + step2 + 1];
-    const Dr = data[off + step3];
-    const Di = data[off + step3 + 1];
+    const Ar = data[off]!;
+    const Ai = data[off + 1]!;
+    const Br = data[off + step]!;
+    const Bi = data[off + step + 1]!;
+    const Cr = data[off + step2]!;
+    const Ci = data[off + step2 + 1]!;
+    const Dr = data[off + step3]!;
+    const Di = data[off + step3 + 1]!;
 
     // Pre-Final values
     const T0r = Ar + Cr;
@@ -348,30 +348,30 @@ class FFT {
           const D = C + quarterLen;
 
           // Original values
-          const Ar = out[A];
-          const Ai = out[A + 1];
-          const Br = out[B];
-          const Bi = out[B + 1];
-          const Cr = out[C];
-          const Ci = out[C + 1];
-          const Dr = out[D];
-          const Di = out[D + 1];
+          const Ar = out[A]!;
+          const Ai = out[A + 1]!;
+          const Br = out[B]!;
+          const Bi = out[B + 1]!;
+          const Cr = out[C]!;
+          const Ci = out[C + 1]!;
+          const Dr = out[D]!;
+          const Di = out[D + 1]!;
 
           // Middle values
           const MAr = Ar;
           const MAi = Ai;
 
-          const tableBr = table[k];
+          const tableBr = table[k]!;
           const tableBi = inv * table[k + 1];
           const MBr = Br * tableBr - Bi * tableBi;
           const MBi = Br * tableBi + Bi * tableBr;
 
-          const tableCr = table[2 * k];
+          const tableCr = table[2 * k]!;
           const tableCi = inv * table[2 * k + 1];
           const MCr = Cr * tableCr - Ci * tableCi;
           const MCi = Cr * tableCi + Ci * tableCr;
 
-          const tableDr = table[3 * k];
+          const tableDr = table[3 * k]!;
           const tableDi = inv * table[3 * k + 1];
           const MDr = Dr * tableDr - Di * tableDi;
           const MDi = Dr * tableDi + Di * tableDr;
@@ -448,11 +448,11 @@ class FFT {
    * NOTE: Only called for len=4
    */
   #singleRealTransform2(outOff: number, off: number, step: number): void {
-    const out = this.#out;
-    const data = this.#data;
+    const out = this.#out!;
+    const data = this.#data!;
 
-    const evenR = data[off];
-    const oddR = data[off + step];
+    const evenR = data[off]!;
+    const oddR = data[off + step]!;
 
     const leftR = evenR + oddR;
     const rightR = evenR - oddR;

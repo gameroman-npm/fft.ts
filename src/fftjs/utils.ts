@@ -29,6 +29,7 @@ function bitReverseArray(n: number): Record<number, number> {
       // prepend zeros from template to current binary. This makes binary values of all indices have the same length.
       currBinary = templateBinary.slice(currBinary.length) + currBinary;
 
+      // oxlint-disable-next-line no-misused-spread
       currBinary = [...currBinary].reverse().join(""); // reverse
       reversed[i] = parseInt(currBinary, 2); // convert to decimal
     }

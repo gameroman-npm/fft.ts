@@ -135,7 +135,7 @@ function log10RmsErr(
   if (n != ximag.length || n != yreal.length || n != yimag.length)
     throw new RangeError("Mismatched lengths");
 
-  let err = Math.pow(10, -99 * 2);
+  let err = 1e-198;
   for (let i = 0; i < n; i++)
     err +=
       (xreal[i]! - yreal[i]!) * (xreal[i]! - yreal[i]!) +
@@ -164,7 +164,7 @@ describe("FFT", () => {
 
   it("diverse sizes", () => {
     for (let i = 0, prev = 0; i <= 100; i++) {
-      const n = Math.round(Math.pow(1500, i / 100.0));
+      const n = Math.round(1500 ** (i / 100));
       if (n > prev) {
         testFft(n);
         prev = n;
@@ -180,7 +180,7 @@ describe("Complex convolution", () => {
 
   it("diverse sizes", () => {
     for (let i = 0, prev = 0; i <= 100; i++) {
-      const n = Math.round(Math.pow(1500, i / 100.0));
+      const n = Math.round(1500 ** (i / 100));
       if (n > prev) {
         testConvolution(n);
         prev = n;

@@ -19,23 +19,27 @@ function constructComplexArray(signal: Signal): ComplexSignal {
 }
 
 function bitReverseArray(n: number): Record<number, number> {
-  if (memoizedReversal[n] === undefined) {
-    const maxBinaryLength = (n - 1).toString(2).length; // get the binary length of the largest index.
-    const templateBinary = "0".repeat(maxBinaryLength); // create a template binary of that length.
-    const reversed: Record<number, number> = {};
-    for (let i = 0; i < n; i++) {
-      let currBinary = i.toString(2); // get binary value of current index.
+  const memo = memoizedReversal[n];
+  if (memo) return memo;
 
-      // prepend zeros from template to current binary. This makes binary values of all indices have the same length.
-      currBinary = templateBinary.slice(currBinary.length) + currBinary;
+  const width = 32 - Math.clz32(n - 1);
+  const reversed: Record<number, number> = {};
 
-      // oxlint-disable-next-line no-misused-spread
-      currBinary = [...currBinary].reverse().join(""); // reverse
-      reversed[i] = parseInt(currBinary, 2); // convert to decimal
+  for (let i = 0; i < n; i++) {
+    let orig = i;
+    let rev = 0;
+
+    for (let j = 0; j < width; j++) {
+      // Push rev left, grab orig's rightmost bit
+      rev = (rev << 1) | (orig & 1);
+      // Shift orig right to get the next bit
+      orig >>= 1;
     }
-    memoizedReversal[n] = reversed; // save
+
+    reversed[i] = rev;
   }
-  return memoizedReversal[n];
+
+  return (memoizedReversal[n] = reversed);
 }
 
 /* complex multiplication */

@@ -45,7 +45,7 @@ function fft(signal: Signal): ComplexSignal {
   }
   // iterate over the number of stages
   for (let n = 1; n <= logN; n++) {
-    const currN = Math.pow(2, n);
+    const currN = 2 ** n;
 
     // find twiddle factors
     for (let k = 0; k < currN / 2; k++) {

@@ -120,8 +120,7 @@ describe("FFT.js", () => {
   });
 
   it("should transform big recursive case", () => {
-    const input = [];
-    for (let i = 0; i < 256; i++) input.push(i);
+    const input = [...Array(256).keys()];
 
     const f = new FFT(input.length);
 
@@ -133,8 +132,7 @@ describe("FFT.js", () => {
   });
 
   it("should transform big recursive radix-2 case", () => {
-    const input = [];
-    for (let i = 0; i < 128; i++) input.push(i);
+    const input = [...Array(128).keys()];
 
     const f = new FFT(input.length);
 

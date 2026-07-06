@@ -1,6 +1,6 @@
 {
   "name": "fft.ts",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "keywords": [
     "fft"
   ],
@@ -15,10 +15,9 @@
   ],
   "type": "module",
   "exports": {
-    "./fft-js": "./dist/fft-js.mjs",
-    "./fft.js": "./dist/fft.js.mjs",
-    "./fftjs": "./dist/fftjs.mjs",
-    "./nayuki": "./dist/nayuki.mjs",
+    ".": "./dist/index.mjs",
+    "./fast": "./dist/fast.mjs",
+    "./utils": "./dist/utils.mjs",
     "./package.json": "./package.json"
   },
   "scripts": {

@@ -23,16 +23,11 @@ class FFT {
     }
     this.table = table;
 
-    // Find size's power of two
     let power = 0;
     for (let t = 1; this.size > t; t <<= 1) power++;
 
-    // Calculate initial step's width:
-    //   * If we are full radix-4 - it is 2x smaller to give inital len=8
-    //   * Otherwise it is the same as `power` to give len=4
     this.#width = power % 2 === 0 ? power - 1 : power;
 
-    // Pre-compute bit-reversal patterns
     this.#bitrev = Array.from({ length: 1 << this.#width });
     for (let j = 0; j < this.#bitrev.length; j++) {
       this.#bitrev[j] = 0;
@@ -49,7 +44,7 @@ class FFT {
 
   fromComplexArray(complex: number[], storage?: number[]): number[] {
     const res = storage || Array.from({ length: complex.length >>> 1 });
-    for (let i = 0; i < complex.length; i += 2) res[i >>> 1] = complex[i];
+    for (let i = 0; i < complex.length; i += 2) res[i >>> 1] = complex[i]!;
     return res;
   }
 
@@ -62,7 +57,7 @@ class FFT {
   toComplexArray(input: number[], storage?: number[]): number[] {
     const res = storage || this.createComplexArray();
     for (let i = 0; i < res.length; i += 2) {
-      res[i] = input[i >>> 1];
+      res[i] = input[i >>> 1]!;
       res[i + 1] = 0;
     }
     return res;
@@ -116,14 +111,10 @@ class FFT {
     this.#data = null;
   }
 
-  /**
-   * radix-4 implementation
-   */
   #transform4(): void {
     const out = this.#out!;
     const size = this.#csize;
 
-    // Initial step (permute and transform)
     const width = this.#width;
     let step = 1 << width;
     let len = (size / step) << 1;
@@ -135,23 +126,19 @@ class FFT {
         this.#singleTransform2(outOff, off, step);
       }
     } else {
-      // len === 8
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
         const off = bitrev[t]!;
         this.#singleTransform4(outOff, off, step);
       }
     }
 
-    // Loop through steps in decreasing order
     const inv = this.#inv ? -1 : 1;
     const table = this.table;
     for (step >>= 2; step >= 2; step >>= 2) {
       len = (size / step) << 1;
       const quarterLen = len >>> 2;
 
-      // Loop through offsets in the data
       for (let outOff = 0; outOff < size; outOff += len) {
-        // Full case
         const limit = outOff + quarterLen;
         for (let i = outOff, k = 0; i < limit; i += 2, k += step) {
           const A = i;
@@ -159,7 +146,6 @@ class FFT {
           const C = B + quarterLen;
           const D = C + quarterLen;
 
-          // Original values
           const Ar = out[A]!;
           const Ai = out[A + 1]!;
           const Br = out[B]!;
@@ -169,26 +155,24 @@ class FFT {
           const Dr = out[D]!;
           const Di = out[D + 1]!;
 
-          // Middle values
           const MAr = Ar;
           const MAi = Ai;
 
           const tableBr = table[k]!;
-          const tableBi = inv * table[k + 1];
+          const tableBi = inv * table[k + 1]!;
           const MBr = Br * tableBr - Bi * tableBi;
           const MBi = Br * tableBi + Bi * tableBr;
 
           const tableCr = table[2 * k]!;
-          const tableCi = inv * table[2 * k + 1];
+          const tableCi = inv * table[2 * k + 1]!;
           const MCr = Cr * tableCr - Ci * tableCi;
           const MCi = Cr * tableCi + Ci * tableCr;
 
           const tableDr = table[3 * k]!;
-          const tableDi = inv * table[3 * k + 1];
+          const tableDi = inv * table[3 * k + 1]!;
           const MDr = Dr * tableDr - Di * tableDi;
           const MDi = Dr * tableDi + Di * tableDr;
 
-          // Pre-Final values
           const T0r = MAr + MCr;
           const T0i = MAi + MCi;
           const T1r = MAr - MCr;
@@ -198,7 +182,6 @@ class FFT {
           const T3r = inv * (MBr - MDr);
           const T3i = inv * (MBi - MDi);
 
-          // Final values
           const FAr = T0r + T2r;
           const FAi = T0i + T2i;
 
@@ -224,11 +207,6 @@ class FFT {
     }
   }
 
-  /**
-   * radix-2 implementation
-   *
-   * NOTE: Only called for len=4
-   */
   #singleTransform2(outOff: number, off: number, step: number): void {
     const out = this.#out!;
     const data = this.#data!;
@@ -249,11 +227,6 @@ class FFT {
     out[outOff + 3] = rightI;
   }
 
-  /**
-   * radix-4
-   *
-   * NOTE: Only called for len=8
-   */
   #singleTransform4(outOff: number, off: number, step: number): void {
     const out = this.#out!;
     const data = this.#data!;
@@ -261,7 +234,6 @@ class FFT {
     const step2 = step * 2;
     const step3 = step * 3;
 
-    // Original values
     const Ar = data[off]!;
     const Ai = data[off + 1]!;
     const Br = data[off + step]!;
@@ -271,7 +243,6 @@ class FFT {
     const Dr = data[off + step3]!;
     const Di = data[off + step3 + 1]!;
 
-    // Pre-Final values
     const T0r = Ar + Cr;
     const T0i = Ai + Ci;
     const T1r = Ar - Cr;
@@ -281,7 +252,6 @@ class FFT {
     const T3r = inv * (Br - Dr);
     const T3i = inv * (Bi - Di);
 
-    // Final values
     const FAr = T0r + T2r;
     const FAi = T0i + T2i;
 
@@ -304,14 +274,10 @@ class FFT {
     out[outOff + 7] = FDi;
   }
 
-  /**
-   * Real input radix-4 implementation
-   */
   #realTransform4(): void {
     const out = this.#out!;
     const size = this.#csize;
 
-    // Initial step (permute and transform)
     const width = this.#width;
     let step = 1 << width;
     let len = (size / step) << 1;
@@ -319,18 +285,16 @@ class FFT {
     const bitrev = this.#bitrev;
     if (len === 4) {
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
-        const off = bitrev[t];
+        const off = bitrev[t]!;
         this.#singleRealTransform2(outOff, off >>> 1, step >>> 1);
       }
     } else {
-      // len === 8
       for (let outOff = 0, t = 0; outOff < size; outOff += len, t++) {
-        const off = bitrev[t];
+        const off = bitrev[t]!;
         this.#singleRealTransform4(outOff, off >>> 1, step >>> 1);
       }
     }
 
-    // Loop through steps in decreasing order
     const inv = this.#inv ? -1 : 1;
     const table = this.table;
     for (step >>= 2; step >= 2; step >>= 2) {
@@ -339,7 +303,6 @@ class FFT {
       const quarterLen = halfLen >>> 1;
       const hquarterLen = quarterLen >>> 1;
 
-      // Loop through offsets in the data
       for (let outOff = 0; outOff < size; outOff += len) {
         for (let i = 0, k = 0; i <= hquarterLen; i += 2, k += step) {
           const A = outOff + i;
@@ -347,7 +310,6 @@ class FFT {
           const C = B + quarterLen;
           const D = C + quarterLen;
 
-          // Original values
           const Ar = out[A]!;
           const Ai = out[A + 1]!;
           const Br = out[B]!;
@@ -357,26 +319,24 @@ class FFT {
           const Dr = out[D]!;
           const Di = out[D + 1]!;
 
-          // Middle values
           const MAr = Ar;
           const MAi = Ai;
 
           const tableBr = table[k]!;
-          const tableBi = inv * table[k + 1];
+          const tableBi = inv * table[k + 1]!;
           const MBr = Br * tableBr - Bi * tableBi;
           const MBi = Br * tableBi + Bi * tableBr;
 
           const tableCr = table[2 * k]!;
-          const tableCi = inv * table[2 * k + 1];
+          const tableCi = inv * table[2 * k + 1]!;
           const MCr = Cr * tableCr - Ci * tableCi;
           const MCi = Cr * tableCi + Ci * tableCr;
 
           const tableDr = table[3 * k]!;
-          const tableDi = inv * table[3 * k + 1];
+          const tableDi = inv * table[3 * k + 1]!;
           const MDr = Dr * tableDr - Di * tableDi;
           const MDi = Dr * tableDi + Di * tableDr;
 
-          // Pre-Final values
           const T0r = MAr + MCr;
           const T0i = MAi + MCi;
           const T1r = MAr - MCr;
@@ -386,7 +346,6 @@ class FFT {
           const T3r = inv * (MBr - MDr);
           const T3i = inv * (MBi - MDi);
 
-          // Final values
           const FAr = T0r + T2r;
           const FAi = T0i + T2i;
 
@@ -398,7 +357,6 @@ class FFT {
           out[B] = FBr;
           out[B + 1] = FBi;
 
-          // Output final middle point
           if (i === 0) {
             const FCr = T0r - T2r;
             const FCi = T0i - T2i;
@@ -407,14 +365,8 @@ class FFT {
             continue;
           }
 
-          // Do not overwrite ourselves
           if (i === hquarterLen) continue;
 
-          // In the flipped case:
-          // MAi = -MAi
-          // MBr=-MBi, MBi=-MBr
-          // MCr=-MCr
-          // MDr=MDi, MDi=MDr
           const ST0r = T1r;
           const ST0i = -T1i;
           const ST1r = T0r;
@@ -442,11 +394,6 @@ class FFT {
     }
   }
 
-  /**
-   * radix-2 implementation
-   *
-   * NOTE: Only called for len=4
-   */
   #singleRealTransform2(outOff: number, off: number, step: number): void {
     const out = this.#out!;
     const data = this.#data!;
@@ -463,11 +410,6 @@ class FFT {
     out[outOff + 3] = 0;
   }
 
-  /**
-   * radix-4
-   *
-   * NOTE: Only called for len=8
-   */
   #singleRealTransform4(outOff: number, off: number, step: number): void {
     const out = this.#out!;
     const data = this.#data!;
@@ -475,19 +417,16 @@ class FFT {
     const step2 = step * 2;
     const step3 = step * 3;
 
-    // Original values
-    const Ar = data[off];
-    const Br = data[off + step];
-    const Cr = data[off + step2];
-    const Dr = data[off + step3];
+    const Ar = data[off]!;
+    const Br = data[off + step]!;
+    const Cr = data[off + step2]!;
+    const Dr = data[off + step3]!;
 
-    // Pre-Final values
     const T0r = Ar + Cr;
     const T1r = Ar - Cr;
     const T2r = Br + Dr;
     const T3r = inv * (Br - Dr);
 
-    // Final values
     const FAr = T0r + T2r;
 
     const FBr = T1r;

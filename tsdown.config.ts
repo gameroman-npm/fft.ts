@@ -2,10 +2,9 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   entry: {
-    "fft-js": "src/fft-js/index.ts",
-    "fft.js": "src/fft.js/index.ts",
-    fftjs: "src/fftjs/index.ts",
-    nayuki: "src/nayuki/index.ts",
+    index: "src/index.ts",
+    utils: "src/utils.ts",
+    fast: "src/fast.ts",
   },
   exports: true,
   dts: true,

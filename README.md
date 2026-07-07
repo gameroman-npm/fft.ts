@@ -3,7 +3,7 @@
 Fast Fourier Transform in TypeScript. Supports any input size (power-of-2 via Cooley-Tukey radix-2, arbitrary via Bluestein's algorithm).
 
 ```ts
-import { fft, ifft, fftfreq, fftshift } from "fft.ts";
+import { fft, ifft } from "fft.ts";
 
 const real = [1, 0, 1, 0];
 const imag = [0, 0, 0, 0];

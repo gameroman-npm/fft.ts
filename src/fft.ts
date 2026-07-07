@@ -13,7 +13,7 @@ function reverseBits(val: number, width: number): number {
 }
 
 function isPowerOf2(n: number): boolean {
-  return n > 0 && (n & (n - 1)) === 0;
+  return (n & (n - 1)) === 0;
 }
 
 function transformRadix2(real: number[], imag: number[]): void {

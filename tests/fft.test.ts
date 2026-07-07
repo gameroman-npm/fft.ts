@@ -5,8 +5,8 @@ import type { FFTResult } from "fft.ts";
 
 function expectFFTClose(
   actual: FFTResult,
-  expected: { real: number[]; imag: number[] },
-  precision = 9,
+  expected: FFTResult,
+  precision = 12,
 ) {
   for (let i = 0; i < expected.real.length; i++) {
     expect(actual.real[i]).toBeCloseTo(expected.real[i]!, precision);
@@ -18,10 +18,7 @@ function randomArray(n: number): number[] {
   return Array.from({ length: n }, () => Math.random() * 2 - 1);
 }
 
-function rmsError(
-  actual: FFTResult,
-  expected: { real: number[]; imag: number[] },
-): number {
+function rmsError(actual: FFTResult, expected: FFTResult): number {
   const n = actual.real.length;
   let err = 0;
   for (let i = 0; i < n; i++) {
@@ -142,7 +139,7 @@ describe("fft", () => {
 
   it("should handle size 1", () => {
     const result = fft([3], [4]);
-    expectFFTClose(result, { real: [3], imag: [4] });
+    expectFFTClose(result, { real: [3], imag: [4] }, 100);
   });
 });
 
@@ -152,7 +149,7 @@ describe("ifft", () => {
     const imag = [0, 0, 0, 0];
     const fwd = fft(real, imag);
     const back = ifft(fwd.real, fwd.imag);
-    expectFFTClose(back, { real, imag }, 10);
+    expectFFTClose(back, { real, imag }, 100);
   });
 
   it("should not mutate input arrays", () => {

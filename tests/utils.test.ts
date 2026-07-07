@@ -41,6 +41,11 @@ describe("fftfreq", () => {
     expect(result[6]).toBeCloseTo(-0.25, 10);
     expect(result[7]).toBeCloseTo(-0.125, 10);
   });
+
+  it("should match numpy behaviour", () => {
+    expect(fftfreq(5, 100)).toEqual([0, 20, 40, -40, -20]);
+    expect(fftfreq(10, 50)).toEqual([0, 5, 10, 15, 20, -25, -20, -15, -10, -5]);
+  });
 });
 
 describe("fftshift", () => {
@@ -72,6 +77,13 @@ describe("fftshift", () => {
       [4, 0],
       [1, 0],
       [2, 0],
+    ]);
+  });
+
+  it("should match numpy behaviour", () => {
+    expect(fftshift(fftfreq(5, 100))).toEqual([-40, -20, 0, 20, 40]);
+    expect(fftshift(fftfreq(10, 50))).toEqual([
+      -25, -20, -15, -10, -5, 0, 5, 10, 15, 20,
     ]);
   });
 });

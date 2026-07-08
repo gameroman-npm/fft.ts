@@ -1,7 +1,9 @@
+import { isPowerOf2 } from "./utils";
+
 class FFT {
-  private size: number;
+  #size: number;
   #csize: number;
-  private table: number[];
+  #table: number[];
   #width: number;
   #bitrev: number[];
   #out: number[] | null = null;
@@ -9,22 +11,23 @@ class FFT {
   #inv: number = 0;
 
   constructor(size: number) {
-    this.size = size | 0;
-    if (this.size <= 1 || (this.size & (this.size - 1)) !== 0)
+    this.#size = size | 0;
+    if (this.#size <= 1 || !isPowerOf2(this.#size)) {
       throw new Error("FFT size must be a power of two and bigger than 1");
+    }
 
     this.#csize = size << 1;
 
-    const table = Array.from<number>({ length: this.size * 2 });
+    const table = Array.from<number>({ length: this.#size * 2 });
     for (let i = 0; i < table.length; i += 2) {
-      const angle = (Math.PI * i) / this.size;
+      const angle = (Math.PI * i) / this.#size;
       table[i] = Math.cos(angle);
       table[i + 1] = -Math.sin(angle);
     }
-    this.table = table;
+    this.#table = table;
 
     let power = 0;
-    for (let t = 1; this.size > t; t <<= 1) power++;
+    for (let t = 1; this.#size > t; t <<= 1) power++;
 
     this.#width = power % 2 === 0 ? power - 1 : power;
 
@@ -36,10 +39,6 @@ class FFT {
         this.#bitrev[j]! |= ((j >>> shift) & 3) << revShift;
       }
     }
-
-    this.#out = null;
-    this.#data = null;
-    this.#inv = 0;
   }
 
   fromComplexArray(complex: number[], storage?: number[]): number[] {
@@ -106,7 +105,7 @@ class FFT {
     this.#data = data;
     this.#inv = 1;
     this.#transform4();
-    for (let i = 0; i < out.length; i++) out[i]! /= this.size;
+    for (let i = 0; i < out.length; i++) out[i]! /= this.#size;
     this.#out = null;
     this.#data = null;
   }
@@ -133,7 +132,7 @@ class FFT {
     }
 
     const inv = this.#inv ? -1 : 1;
-    const table = this.table;
+    const table = this.#table;
     for (step >>= 2; step >= 2; step >>= 2) {
       len = (size / step) << 1;
       const quarterLen = len >>> 2;
@@ -296,7 +295,7 @@ class FFT {
     }
 
     const inv = this.#inv ? -1 : 1;
-    const table = this.table;
+    const table = this.#table;
     for (step >>= 2; step >= 2; step >>= 2) {
       len = (size / step) << 1;
       const halfLen = len >>> 1;

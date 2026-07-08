@@ -1,5 +1,3 @@
-type ComplexObj = { real: number; imag: number };
-
 function fftfreq(n: number, frequency: number): number[] {
   const freqs = Array.from<number>({ length: n });
   const factor = 1.0 / (n * (1 / frequency));
@@ -15,5 +13,8 @@ function fftshift<T extends number | [number, number]>(arr: T[]): T[] {
   return [...arr.slice(half), ...arr.slice(0, half)];
 }
 
-export { fftfreq, fftshift };
-export type { ComplexObj };
+function isPowerOf2(n: number): boolean {
+  return (n & (n - 1)) === 0;
+}
+
+export { fftfreq, fftshift, isPowerOf2 };

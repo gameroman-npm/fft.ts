@@ -33,13 +33,6 @@ jobs:
       - name: Run Build
         run: bun run build
 
-      - name: Create Tag
-        run: |
-          VERSION=$(bun -p "(await import('./package.json')).version")
-
-          git tag v$VERSION
-          git push origin v$VERSION
-
       - name: Install npm and publish to npm
         run: |
           bun i -g npm@11.18.0
@@ -47,3 +40,10 @@ jobs:
           npm -v
 
           npm stage publish --provenance
+
+      - name: Create Tag
+        run: |
+          VERSION=$(bun -p "(await import('./package.json')).version")
+
+          git tag v$VERSION
+          git push origin v$VERSION

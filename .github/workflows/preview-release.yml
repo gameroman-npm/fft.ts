@@ -1,16 +1,14 @@
-name: CI
+name: Publish preview
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
 permissions: {}
 
 jobs:
-  test:
-    name: Test and Build
+  publish:
+    name: Publish preview
     runs-on: ubuntu-latest
 
     steps:
@@ -33,8 +31,5 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Lint
-        run: bun run lint
-
-      - name: Run tests
-        run: bun run test
+      - name: Publish to pkg.pr.new
+        run: bunx pkg-pr-new publish --commentWithSha

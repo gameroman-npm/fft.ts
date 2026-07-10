@@ -1,3 +1,5 @@
+import { isPowerOf2 } from "./utils";
+
 type FFTResult = {
   real: number[];
   imag: number[];
@@ -10,10 +12,6 @@ function reverseBits(val: number, width: number): number {
     val >>>= 1;
   }
   return result;
-}
-
-function isPowerOf2(n: number): boolean {
-  return (n & (n - 1)) === 0;
 }
 
 function transformRadix2(real: number[], imag: number[]): void {

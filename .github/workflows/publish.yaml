@@ -10,7 +10,7 @@ permissions: {}
 jobs:
   publish:
     name: Publish
-    if: "startsWith(github.event.head_commit.message, 'chore: release v')"
+    if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'chore: release v')"
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -40,10 +40,10 @@ jobs:
           git tag v$VERSION
           git push origin v$VERSION
 
-      - name: Install npm
-        run: bun i -g npm@11.18.0
+      - name: Install npm and publish to npm
+        run: |
+          bun i -g npm@11.18.0
 
-      - name: Stage Publish to npm
-        run: npm stage publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm -v
+
+          npm stage publish --provenance
